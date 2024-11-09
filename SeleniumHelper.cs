@@ -6,12 +6,11 @@ public class SeleniumHelper
 {
     /// <summary>
     /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
+    /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver> InitDriver(Func<IWebDriver, Task> logIn)
+    public static async Task<IWebDriver> InitDriver()
     {
-        ArgumentNullException.ThrowIfNull(logIn, nameof(logIn));
-
         //string? html = null;
         IWebDriver? driver = null;
         //driver = new ChromeDriver(@"D:\pa\_dev\_selenium\chromedriver-win64\");
@@ -24,8 +23,6 @@ public class SeleniumHelper
         // otevře se firefox ale žádnou stránku 
         //driver = new FirefoxDriver(@"D:\pa\_dev\_selenium\geckodriver-v0.35.0-win64\");
         driver.Manage().Window.Maximize();
-
-        await logIn(driver);
 
         return driver;
     }
