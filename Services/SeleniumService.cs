@@ -1,20 +1,34 @@
 namespace SunamoSelenium.Services;
+
+using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 
-public class SeleniumService(IWebDriver driver)
+public class SeleniumService(IWebDriver driver, ILogger logger)
 {
     public void WaitForPageReady()
     {
+        var actual = DateTime.Now;
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+        var diff = DateTime.Now - actual;
+
+        var waitResult = wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+        var part = waitResult ? "" : "NOT";
+        logger.LogWarning($"Waiting for page {driver.Url} was {part} successful. Waiting seconds: {diff.TotalSeconds}");
     }
 
-    //public void WaitForElementIsVisible(By by)
-    //{
-    //    WebDriverWait wait = new WebDriverWait(TimeSpan.FromSeconds(3));
-    //    wait.Until(ExpectedConditions.ElementIsVisible(by));
-    //}
+    /// <summary>
+    /// Tuhle metodu jsem zakomentoval ale bez komentáře
+    /// Nevím tedy jestli na ní bylo něco špatně.
+    /// 
+    /// </summary>
+    /// <param name="by"></param>
+    public void WaitForElementIsVisible(By by)
+    {
+        WebDriverWait wait = new(driver, TimeSpan.FromSeconds(3));
+        wait.Until(ExpectedConditions.ElementIsVisible(by));
+    }
 
     public IWebElement? FindElement(By by)
     {
