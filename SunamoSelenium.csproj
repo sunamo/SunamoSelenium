@@ -4,8 +4,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Code base for easy work with Selenium</Description>
-    <Version>25.2.10.1</Version>
-    <PackageReleaseNotes>Added detect for incompatible EdgeDriver version</PackageReleaseNotes>
+    <Version>25.2.21.1</Version>
+    <PackageReleaseNotes>Clean up code</PackageReleaseNotes>
     <Authors>www.sunamo.cz</Authors>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>

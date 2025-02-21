@@ -12,7 +12,7 @@ public class SeleniumHelper
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver> InitDriver(ILogger logger, string pathToEdgeDriver)
+    public static async Task<IWebDriver?> InitDriver(ILogger logger, string pathToEdgeDriver)
     {
         if (!File.Exists(pathToEdgeDriver))
         {
@@ -20,7 +20,6 @@ public class SeleniumHelper
             return null;
         }
 
-        #region Zjišťování zda verze sedí. Později to tu dodělat. Ale aktuálně si to umí zjišťovat samo. Jediné v čem by to mohlo pomoct je zjistit minor merze. Major verze to už hledá.
         var ps = PowerShell.Create();
         var wd = Path.GetDirectoryName(pathToEdgeDriver);
 
@@ -47,8 +46,6 @@ public class SeleniumHelper
             versionEdgeDriver = Version.Parse(version);
         }
 
-
-
         ps = PowerShell.Create();
         ps.AddScript("where.exe msedge");
         var whereOutput = await PsOutput.InvokeAsync(ps);
@@ -74,19 +71,13 @@ public class SeleniumHelper
         {
             logger.LogWarning($"Major version EdgeDriver {versionEdgeDriver.Major} is different than version Edge {versionEdge.Major}. Download new on https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH, if you want.");
         }
-        #endregion
-
 
         EdgeOptions options = new();
-
 
         // toto tu je abych se vyhnul chybě disconnected: not connected to DevTools
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 
-        //@"D:\pa\_dev\edgedriver_win64\"
         var driver = new EdgeDriver(pathToEdgeDriver, options);
-        // otevře se firefox ale žádnou stránku 
-        //driver = new FirefoxDriver(@"D:\pa\_dev\_selenium\geckodriver-v0.35.0-win64\");
         driver.Manage().Window.Maximize();
 
         return driver;

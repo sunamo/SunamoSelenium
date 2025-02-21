@@ -44,7 +44,7 @@ public class PsOutput
     {
         sb.Clear();
 
-        if (e == null) return; // string.Empty;
+        if (e == null) return;
 
         if (e.ErrorDetails != null) sb.AppendLine(e.ErrorDetails.Message);
 
