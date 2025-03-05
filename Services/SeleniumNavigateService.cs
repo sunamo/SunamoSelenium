@@ -1,6 +1,4 @@
 namespace SunamoSelenium.Services;
-using Microsoft.Extensions.Logging;
-using OpenQA.Selenium;
 
 public class SeleniumNavigateService(ILogger logger, IWebDriver driver, SeleniumService selenium)
 {
