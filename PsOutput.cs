@@ -27,6 +27,7 @@ public class PsOutput
         }
         return result;
     }
+
     private static void AddErrorRecord(StringBuilder sb, ErrorRecord e)
     {
         sb.Clear();
