@@ -1,7 +1,6 @@
 global using SunamoSelenium;
 global using SunamoSelenium.Services;
 global using SunamoSelenium.Extensions;
-
 global using Microsoft.Extensions.Logging;
 global using OpenQA.Selenium.Edge;
 global using OpenQA.Selenium.Support.UI;
