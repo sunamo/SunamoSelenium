@@ -4,8 +4,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Code base for easy work with Selenium</Description>
-    <Version>25.3.29.1</Version>
-    <PackageReleaseNotes>Updated nuget to latest versions</PackageReleaseNotes>
+    <Version>25.4.1.1</Version>
+    <PackageReleaseNotes>Added pass human verify of Cloudflare</PackageReleaseNotes>
     <Authors>www.sunamo.cz</Authors>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
