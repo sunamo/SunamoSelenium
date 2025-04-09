@@ -7,22 +7,23 @@ public class SeleniumHelper
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver?> InitDriver(ILogger logger, string pathToEdgeDriver)
+    public static async Task<IWebDriver?> InitDriver(ILogger logger, string pathToBrowserDriver)
     {
-        if (!File.Exists(pathToEdgeDriver))
+        if (!File.Exists(pathToBrowserDriver))
         {
-            logger.LogError($"File {pathToEdgeDriver} not found!");
+            logger.LogError($"File {pathToBrowserDriver} not found!");
             return null;
         }
         var ps = PowerShell.Create();
-        var wd = Path.GetDirectoryName(pathToEdgeDriver);
+        var wd = Path.GetDirectoryName(pathToBrowserDriver);
         ps.AddScript($"Set-Location -Path '{wd}'");
-        ps.AddScript(".\\msedgedriver.exe -v");
+        ps.AddScript(".\\" + $"{Path.GetFileName(pathToBrowserDriver)} -v");
         PSDataCollection<PSObject> output = await ps.InvokeAsync();
         List<string> result;
         Version versionEdgeDriver;
         if (ps.HadErrors)
         {
+            logger.LogError("Cannot get version of " + pathToBrowserDriver);
             result = PsOutput.ProcessErrorRecords(ps.Streams.Error);
             return null;
         }
@@ -58,7 +59,7 @@ public class SeleniumHelper
         EdgeOptions options = new();
         // toto tu je abych se vyhnul chybě disconnected: not connected to DevTools
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
-        var driver = new EdgeDriver(pathToEdgeDriver, options);
+        var driver = new EdgeDriver(pathToBrowserDriver, options);
         driver.Manage().Window.Maximize();
         return driver;
     }
