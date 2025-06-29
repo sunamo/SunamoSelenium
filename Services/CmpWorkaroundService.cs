@@ -4,9 +4,9 @@
 /// Zobrazí se mi CMP - i přes mnoho snahy nenašel jsem způsob jak přes něj v Selenium přejít
 /// Stačí se ale přihlásit a je vše OK
 /// </summary>
-public class CmpWorkaroundService(ILogger logger, string email, string password)
+public class CmpWorkaroundService(ILogger logger)
 {
-    public async Task LoginSeznamCz()
+    public async Task LoginSeznamCz(string email, string password)
     {
         var driver = await SeleniumHelper.InitEdgeDriver(logger, @"D:\pa\_dev\edgedriver_win64\msedgedriver.exe");
 
