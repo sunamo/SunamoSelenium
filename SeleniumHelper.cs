@@ -7,7 +7,7 @@ public class SeleniumHelper
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver?> InitDriver(ILogger logger, string pathToBrowserDriver, EdgeOptions? options = null)
+    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, string pathToBrowserDriver, EdgeOptions? options = null)
     {
         if (options == null)
         {
