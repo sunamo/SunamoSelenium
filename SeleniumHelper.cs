@@ -7,13 +7,19 @@ public class SeleniumHelper
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver?> InitDriver(ILogger logger, string pathToBrowserDriver)
+    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, string pathToBrowserDriver, EdgeOptions? options = null)
     {
+        if (options == null)
+        {
+            options = new();
+        }
+
         if (!File.Exists(pathToBrowserDriver))
         {
             logger.LogError($"File {pathToBrowserDriver} not found!");
             return null;
         }
+
         var ps = PowerShell.Create();
         var wd = Path.GetDirectoryName(pathToBrowserDriver);
         ps.AddScript($"Set-Location -Path '{wd}'");
@@ -56,7 +62,7 @@ public class SeleniumHelper
         {
             logger.LogWarning($"Major version EdgeDriver {versionEdgeDriver.Major} is different than version Edge {versionEdge.Major}. Download new on https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH, if you want.");
         }
-        EdgeOptions options = new();
+
         // toto tu je abych se vyhnul chybě disconnected: not connected to DevTools
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
         var driver = new EdgeDriver(pathToBrowserDriver, options);

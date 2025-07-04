@@ -6,8 +6,9 @@ public class SeleniumService(IWebDriver driver, ILogger logger)
     {
         var actual = DateTime.Now;
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        var diff = DateTime.Now - actual;
+
         var waitResult = wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+        var diff = DateTime.Now - actual;
         var part = waitResult ? "" : "NOT";
         logger.LogWarning($"Waiting for page {driver.Url} was {part} successful. Waiting seconds: {diff.TotalSeconds}");
     }
