@@ -1,5 +1,3 @@
-namespace RunnerSelenium;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
@@ -8,6 +6,7 @@ using SunamoSelenium;
 using SunamoSelenium.Services;
 using SunamoSelenium.Tests;
 
+namespace RunnerSelenium;
 partial class Program
 {
 
@@ -27,16 +26,16 @@ partial class Program
 
     static void Main()
     {
-        MainAsync().GetAwaiter().GetResult();
+        MainAsync(args).GetAwaiter().GetResult();
     }
 
-    static async Task MainAsync()
+    static async Task MainAsync(string[] args)
     {
         var runnedAction = await CmdBootStrap.RunWithRunArgs(new SunamoCl.SunamoCmd.Args.RunArgs
         {
             AddGroupOfActions = AddGroupOfActions,
             AskUserIfRelease = true,
-            Args = [],
+            Args = args,
             RunInDebugAsync = RunInDebugAsync,
             ServiceCollection = Services,
             IsDebug =
