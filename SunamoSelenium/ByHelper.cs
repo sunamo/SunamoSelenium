@@ -1,4 +1,5 @@
-﻿namespace SunamoSelenium;
+// Instance variables refactored according to C# conventions
+namespace SunamoSelenium;
 
 public static class ByHelper
 {

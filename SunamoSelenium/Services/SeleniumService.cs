@@ -1,3 +1,4 @@
+// Instance variables refactored according to C# conventions
 namespace SunamoSelenium.Services;
 
 public class SeleniumService(IWebDriver driver, ILogger logger)

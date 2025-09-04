@@ -1,4 +1,5 @@
-﻿namespace SunamoSelenium.Services;
+// Instance variables refactored according to C# conventions
+namespace SunamoSelenium.Services;
 internal class CloudFlareHumanVerifyService(IWebDriver driver)
 {
     public async Task VerifyHuman()

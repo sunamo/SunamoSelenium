@@ -1,4 +1,5 @@
-﻿namespace SunamoSelenium.Services;
+// Instance variables refactored according to C# conventions
+namespace SunamoSelenium.Services;
 /// <summary>
 /// Když načtu např. https://www.firmy.cz/Banky-a-financni-sluzby/Ucetni-sluzby/Danove-poradenstvi/kraj-praha nepříhlášený
 /// Zobrazí se mi CMP - i přes mnoho snahy nenašel jsem způsob jak přes něj v Selenium přejít
