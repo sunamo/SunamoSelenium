@@ -1,14 +1,28 @@
 // Instance variables refactored according to C# conventions
+using SunamoSelenium._sunamo;
+
 namespace SunamoSelenium;
 
 public class SeleniumHelper
 {
+    // CZ: URL pro stažení EdgeDriver
+    private const string EdgeDriverDownloadUrl = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH";
+
+    /// <summary>
+    /// Opens the EdgeDriver download page in the default browser
+    /// CZ: Otevře stránku pro stažení EdgeDriveru ve výchozím prohlížeči
+    /// </summary>
+    public static void OpenEdgeDriverDownloadPage()
+    {
+        PHWin.OpenUrlInDefaultBrowser(EdgeDriverDownloadUrl);
+    }
+
     /// <summary>
     /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, string pathToBrowserDriver, EdgeOptions? options = null)
+    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, string pathToBrowserDriver, EdgeOptions? options = null, bool throwEx = false)
     {
         if (options == null)
         {
@@ -56,12 +70,20 @@ public class SeleniumHelper
         var versionEdge = Version.Parse(edgeVersionOutput[0]);
         if (versionEdge.Major != versionEdgeDriver.Major)
         {
-            logger.LogError($"Version EdgeDriver {versionEdgeDriver} is different than version Edge {versionEdge}. Download new on https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH");
+            var message = $"Version EdgeDriver {versionEdgeDriver} is different than version Edge {versionEdge}. Download new on {EdgeDriverDownloadUrl}. Use OpenEdgeDriverDownloadPage() method to open download page.";
+
+            if (throwEx)
+            {
+
+                throw new Exception(message);
+            }
+
+            logger.LogError(message);
             return null;
         }
         else if (versionEdge.Major != versionEdgeDriver.Major)
         {
-            logger.LogWarning($"Major version EdgeDriver {versionEdgeDriver.Major} is different than version Edge {versionEdge.Major}. Download new on https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH, if you want.");
+            logger.LogWarning($"Major version EdgeDriver {versionEdgeDriver.Major} is different than version Edge {versionEdge.Major}. Download new on {EdgeDriverDownloadUrl}, if you want. Use OpenEdgeDriverDownloadPage() method to open download page.");
         }
 
         // toto tu je abych se vyhnul chybě disconnected: not connected to DevTools
