@@ -24,7 +24,7 @@ partial class Program
         logger = Provider.GetService<ILogger>() ?? throw new ServiceNotFoundException(nameof(ILogger));
     }
 
-    static void Main()
+    static void Main(string[] args)
     {
         MainAsync(args).GetAwaiter().GetResult();
     }
@@ -67,6 +67,12 @@ false
     private static async Task LoginSeznamkaCz()
     {
         var driver = await SeleniumHelper.InitEdgeDriver(logger, @"D:\pa\_dev\edgedriver_win64\msedgedriver.exe");
+
+        if (driver == null)
+        {
+            logger.LogError("Failed to initialize Edge driver");
+            return;
+        }
 
         SeleniumService seleniumService = new SeleniumService(driver, logger);
 
