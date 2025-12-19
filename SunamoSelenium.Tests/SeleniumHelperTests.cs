@@ -13,8 +13,10 @@ public class SeleniumHelperTests
     [Fact]
     public async Task InitDriverTest()
     {
-        var data = await SeleniumHelper.InitEdgeDriver(logger, @"D:\pa\_dev\edgedriver_win64\msedgedriver.exe");
+        // EN: Use Selenium Manager for automatic EdgeDriver download and management
+        // CZ: Použij Selenium Manager pro automatické stažení a správu EdgeDriveru
+        var data = await SeleniumHelper.InitEdgeDriver(logger);
 
-
+        Assert.NotNull(data);
     }
 }

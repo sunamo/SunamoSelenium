@@ -1,7 +1,8 @@
+namespace SunamoSelenium.Services;
+
 // EN: Variable names have been checked and replaced with self-descriptive names
 // CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
 // Instance variables refactored according to C# conventions
-namespace SunamoSelenium.Services;
 internal class CloudFlareHumanVerifyService(IWebDriver driver)
 {
     public async Task VerifyHuman()

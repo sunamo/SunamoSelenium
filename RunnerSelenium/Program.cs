@@ -57,7 +57,7 @@ false
         SeleniumHelperTests t = new SeleniumHelperTests();
         //await t.InitDriverTest();
 
-        //await LoginSeznamkaCz();
+        await LoginSeznamkaCz();
 
         //await LoginSeznamCz();
     }
@@ -66,6 +66,8 @@ false
 
     private static async Task LoginSeznamkaCz()
     {
+        // EN: Use local EdgeDriver (network issues prevent automatic download)
+        // CZ: Použij lokální EdgeDriver (síťové problémy brání automatickému stažení)
         var driver = await SeleniumHelper.InitEdgeDriver(logger, @"D:\pa\_dev\edgedriver_win64\msedgedriver.exe");
 
         if (driver == null)
