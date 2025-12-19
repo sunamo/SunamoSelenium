@@ -19,6 +19,16 @@ public class SeleniumHelper
     }
 
     /// <summary>
+    /// Alias for InitEdgeDriver for backward compatibility
+    /// EN: Initializes Edge WebDriver. If pathToBrowserDriver is null, WebDriverManager will automatically download the correct driver version
+    /// CZ: Alias pro InitEdgeDriver kvůli zpětné kompatibilitě. Pokud je pathToBrowserDriver null, WebDriverManager automaticky stáhne správnou verzi driveru
+    /// </summary>
+    public static async Task<IWebDriver?> InitDriver(ILogger logger, string? pathToBrowserDriver = null, EdgeOptions? options = null, bool throwEx = false)
+    {
+        return await InitEdgeDriver(logger, pathToBrowserDriver, options, throwEx);
+    }
+
+    /// <summary>
     /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// EN: If pathToBrowserDriver is null, WebDriverManager will automatically download the correct driver version

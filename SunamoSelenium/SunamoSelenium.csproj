@@ -4,8 +4,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Code base for easy work with Selenium</Description>
-    <Version>25.12.19.1</Version>
-    <PackageReleaseNotes>Using SeleniumManager to auto download web drivers</PackageReleaseNotes>
+    <Version>25.12.19.2</Version>
+    <PackageReleaseNotes>InitDriver without specifiyng web driver exe</PackageReleaseNotes>
     <Authors>www.sunamo.cz</Authors>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
