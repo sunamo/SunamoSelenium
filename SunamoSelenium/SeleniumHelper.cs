@@ -1,13 +1,14 @@
 namespace SunamoSelenium;
 
 using SunamoSelenium._sunamo;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
 
 public class SeleniumHelper
 {
     // CZ: URL pro stažení EdgeDriver
     private const string EdgeDriverDownloadUrl = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH";
+
+    // CZ: URL pro stažení ChromeDriver
+    private const string ChromeDriverDownloadUrl = "https://googlechromelabs.github.io/chrome-for-testing/";
 
     /// <summary>
     /// Opens the EdgeDriver download page in the default browser
@@ -19,23 +20,32 @@ public class SeleniumHelper
     }
 
     /// <summary>
-    /// Alias for InitEdgeDriver for backward compatibility
-    /// EN: Initializes Edge WebDriver. If pathToBrowserDriver is null, WebDriverManager will automatically download the correct driver version
-    /// CZ: Alias pro InitEdgeDriver kvůli zpětné kompatibilitě. Pokud je pathToBrowserDriver null, WebDriverManager automaticky stáhne správnou verzi driveru
+    /// Opens the ChromeDriver download page in the default browser
+    /// CZ: Otevře stránku pro stažení ChromeDriveru ve výchozím prohlížeči
     /// </summary>
-    public static async Task<IWebDriver?> InitDriver(ILogger logger, string? pathToBrowserDriver = null, EdgeOptions? options = null, bool throwEx = false)
+    public static void OpenChromeDriverDownloadPage()
     {
-        return await InitEdgeDriver(logger, pathToBrowserDriver, options, throwEx);
+        PHWin.OpenUrlInDefaultBrowser(ChromeDriverDownloadUrl);
+    }
+
+    /// <summary>
+    /// Alias for InitEdgeDriver for backward compatibility
+    /// EN: Initializes Edge WebDriver using built-in Selenium Manager (automatic driver download)
+    /// CZ: Alias pro InitEdgeDriver kvůli zpětné kompatibilitě. Používá vestavěný Selenium Manager (automatické stažení driveru)
+    /// </summary>
+    public static async Task<IWebDriver?> InitDriver(ILogger logger, EdgeOptions? options = null, bool throwEx = false)
+    {
+        return await InitEdgeDriver(logger, options, throwEx);
     }
 
     /// <summary>
     /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
-    /// EN: If pathToBrowserDriver is null, WebDriverManager will automatically download the correct driver version
-    /// CZ: Pokud je pathToBrowserDriver null, WebDriverManager automaticky stáhne správnou verzi driveru
+    /// EN: Uses built-in Selenium Manager (Selenium 4.6+) to automatically download and manage EdgeDriver
+    /// CZ: Používá vestavěný Selenium Manager (Selenium 4.6+) pro automatické stažení a správu EdgeDriveru
     /// </summary>
     /// <returns></returns>
-    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, string? pathToBrowserDriver = null, EdgeOptions? options = null, bool throwEx = false)
+    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, EdgeOptions? options = null, bool throwEx = false)
     {
         if (options == null)
         {
@@ -46,104 +56,77 @@ public class SeleniumHelper
         // CZ: Přidat argumenty pro vyvarování se chybě disconnected: not connected to DevTools
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 
-        IWebDriver driver;
-
-        // EN: If pathToBrowserDriver is null, use WebDriverManager for automatic driver download
-        // CZ: Pokud je pathToBrowserDriver null, použij WebDriverManager pro automatické stažení driveru
-        if (string.IsNullOrEmpty(pathToBrowserDriver))
+        // EN: Use built-in Selenium Manager for automatic EdgeDriver download and management
+        // CZ: Použít vestavěný Selenium Manager pro automatické stažení a správu EdgeDriveru
+        logger.LogInformation("Using built-in Selenium Manager for automatic EdgeDriver management");
+        try
         {
-            logger.LogInformation("Using WebDriverManager for automatic EdgeDriver management");
-            try
-            {
-                // EN: WebDriverManager will automatically download the correct driver version
-                // CZ: WebDriverManager automaticky stáhne správnou verzi driveru
-                new DriverManager().SetUpDriver(new EdgeConfig());
-                driver = new EdgeDriver(options);
-                driver.Manage().Window.Maximize();
-                return driver;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Failed to setup EdgeDriver using WebDriverManager");
-                if (throwEx)
-                {
-                    throw;
-                }
-                return null;
-            }
+            // EN: Selenium Manager (built into Selenium 4.6+) will automatically download the correct driver version
+            // CZ: Selenium Manager (vestavěný v Selenium 4.6+) automaticky stáhne správnou verzi driveru
+            var driver = new EdgeDriver(options);
+            driver.Manage().Window.Maximize();
+            logger.LogInformation("Successfully initialized EdgeDriver using built-in Selenium Manager");
+            return driver;
         }
-
-        // EN: Legacy path with manual driver path and version checking
-        // CZ: Starší způsob s manuální cestou k driveru a kontrolou verzí
-        if (!File.Exists(pathToBrowserDriver))
+        catch (Exception ex)
         {
-            logger.LogError($"File {pathToBrowserDriver} not found!");
-            return null;
-        }
-
-        var ps = PowerShell.Create();
-        var wd = Path.GetDirectoryName(pathToBrowserDriver);
-        ps.AddScript($"Set-Location -Path '{wd}'");
-        ps.AddScript(".\\" + $"{Path.GetFileName(pathToBrowserDriver)} -v");
-        PSDataCollection<PSObject> output = await ps.InvokeAsync();
-        List<string> result;
-        Version versionEdgeDriver;
-        if (ps.HadErrors)
-        {
-            logger.LogError("Cannot get version of " + pathToBrowserDriver);
-            result = PsOutput.ProcessErrorRecords(ps.Streams.Error);
-            return null;
-        }
-        else
-        {
-            result = PsOutput.ProcessPSObjects(output);
-            // Microsoft Edge WebDriver 131.0.2903.48 (eb872b980f9ea5184cec7f71c2e6df8ac30265cc)
-            var parts = result[0].Split(' ');
-            var version = parts[3];
-            versionEdgeDriver = Version.Parse(version);
-        }
-        ps = PowerShell.Create();
-        ps.AddScript("where.exe msedge");
-        var whereOutput = await PsOutput.InvokeAsync(ps);
-        if (!File.Exists(whereOutput[0]))
-        {
-            logger.LogError("where.exe msedge failed: " + whereOutput[0]);
-            return null;
-        }
-        ps = PowerShell.Create();
-        ps.AddScript($"(Get-Item \"{whereOutput[0]}\").VersionInfo.FileVersion");
-        var edgeVersionOutput = await PsOutput.InvokeAsync(ps);
-        var versionEdge = Version.Parse(edgeVersionOutput[0]);
-        var versionDiff = Math.Abs(versionEdge.Major - versionEdgeDriver.Major);
-
-        if (versionDiff > 1)
-        {
-            // EN: Major version difference is too large (more than 1), this will likely not work
-            // CZ: Rozdíl major verzí je příliš velký (více než 1), pravděpodobně nebude fungovat
-            var message = $"Version EdgeDriver {versionEdgeDriver} is very different than version Edge {versionEdge}. Download new on {EdgeDriverDownloadUrl}. Use OpenEdgeDriverDownloadPage() method to open download page.";
+            logger.LogError(ex, "Built-in Selenium Manager failed: {ErrorMessage}. Inner exception: {InnerException}",
+                ex.Message,
+                ex.InnerException?.Message ?? "none");
 
             if (throwEx)
             {
-                throw new Exception(message);
+                throw;
             }
 
-            logger.LogError(message);
             return null;
         }
-        else if (versionDiff == 1)
+    }
+
+    /// <summary>
+    /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
+    /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
+    /// EN: Uses built-in Selenium Manager (Selenium 4.6+) to automatically download and manage ChromeDriver
+    /// CZ: Používá vestavěný Selenium Manager (Selenium 4.6+) pro automatické stažení a správu ChromeDriveru
+    /// </summary>
+    /// <returns></returns>
+    public static async Task<IWebDriver?> InitChromeDriver(ILogger logger, ChromeOptions? options = null, bool throwEx = false)
+    {
+        await Task.Delay(0); // EN: Make method async / CZ: Udělat metodu asynchronní
+
+        if (options == null)
         {
-            // EN: Minor version difference (1), may still work - just warn
-            // CZ: Malý rozdíl verzí (1), může ještě fungovat - jen varování
-            logger.LogWarning($"EdgeDriver version {versionEdgeDriver.Major} differs by 1 from Edge version {versionEdge.Major}. It should still work, but consider updating. Download new on {EdgeDriverDownloadUrl}");
-        }
-        else if (versionEdge.Major != versionEdgeDriver.Major)
-        {
-            logger.LogWarning($"Major version EdgeDriver {versionEdgeDriver.Major} is different than version Edge {versionEdge.Major}. Download new on {EdgeDriverDownloadUrl}, if you want. Use OpenEdgeDriverDownloadPage() method to open download page.");
+            options = new();
         }
 
+        // EN: Add arguments to avoid disconnected: not connected to DevTools error
+        // CZ: Přidat argumenty pro vyvarování se chybě disconnected: not connected to DevTools
+        options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 
-        driver = new EdgeDriver(pathToBrowserDriver, options);
-        driver.Manage().Window.Maximize();
-        return driver;
+        // EN: Use built-in Selenium Manager for automatic ChromeDriver download and management
+        // CZ: Použít vestavěný Selenium Manager pro automatické stažení a správu ChromeDriveru
+        logger.LogInformation("Using built-in Selenium Manager for automatic ChromeDriver management");
+        try
+        {
+            // EN: Selenium Manager (built into Selenium 4.6+) will automatically download the correct driver version
+            // CZ: Selenium Manager (vestavěný v Selenium 4.6+) automaticky stáhne správnou verzi driveru
+            var driver = new ChromeDriver(options);
+            driver.Manage().Window.Maximize();
+            logger.LogInformation("Successfully initialized ChromeDriver using built-in Selenium Manager");
+            return driver;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Built-in Selenium Manager failed: {ErrorMessage}. Inner exception: {InnerException}",
+                ex.Message,
+                ex.InnerException?.Message ?? "none");
+
+            if (throwEx)
+            {
+                throw;
+            }
+
+            return null;
+        }
     }
 }

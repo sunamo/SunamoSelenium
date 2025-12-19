@@ -3,6 +3,7 @@ global using SunamoSelenium.Services;
 global using SunamoSelenium.Extensions;
 global using Microsoft.Extensions.Logging;
 global using OpenQA.Selenium.Edge;
+global using OpenQA.Selenium.Chrome;
 global using OpenQA.Selenium.Support.UI;
 global using OpenQA.Selenium;
 global using SeleniumExtras.WaitHelpers;

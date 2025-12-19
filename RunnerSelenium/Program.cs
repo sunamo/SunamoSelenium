@@ -63,12 +63,11 @@ false
     }
 
 
-
     private static async Task LoginSeznamkaCz()
     {
-        // EN: Use local EdgeDriver (network issues prevent automatic download)
-        // CZ: Použij lokální EdgeDriver (síťové problémy brání automatickému stažení)
-        var driver = await SeleniumHelper.InitEdgeDriver(logger, @"D:\pa\_dev\edgedriver_win64\msedgedriver.exe");
+        // EN: Use built-in Selenium Manager for automatic EdgeDriver download
+        // CZ: Použít vestavěný Selenium Manager pro automatické stažení EdgeDriveru
+        var driver = await SeleniumHelper.InitEdgeDriver(logger);
 
         if (driver == null)
         {
