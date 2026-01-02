@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Edge;
 using SunamoCl.SunamoCmd;
+using SunamoDependencyInjection.Exceptions;
 using SunamoSelenium;
 using SunamoSelenium.Services;
 using SunamoSelenium.Tests;
@@ -57,9 +59,28 @@ false
         SeleniumHelperTests t = new SeleniumHelperTests();
         //await t.InitDriverTest();
 
-        await LoginSeznamkaCz();
+        //await LoginSeznamkaCz();
 
         //await LoginSeznamCz();
+
+        EdgeOptions options = new();
+        options.AddArgument("--disable-blink-features=AutomationControlled");
+        options.AddExcludedArgument("enable-automation");
+        options.AddAdditionalEdgeOption("useAutomationExtension", false);
+        options.AddArgument("--auto-open-devtools-for-tabs");
+
+        // Volitelně zkuste přidat user-agenta běžného prohlížeče
+        options.AddArgument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.2572.88");
+
+        var driver = await SeleniumHelper.InitEdgeDriver(logger, options, throwEx: true);
+        if (driver == null)
+        {
+            logger.LogError("Failed to initialize Edge driver");
+            return;
+        }
+
+        IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+        js.ExecuteScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
     }
 
 

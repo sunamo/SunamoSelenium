@@ -7,8 +7,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SunamoCl" Version="25.1.18.2" />
-    <PackageReference Include="SunamoDependencyInjection" Version="24.12.26.1" />
+    <PackageReference Include="SunamoCl" Version="26.1.2.1" />
+    <PackageReference Include="SunamoDependencyInjection" Version="26.1.1.187" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="*" Pack="True" />
     <ProjectReference Include="..\SunamoSelenium.Tests\SunamoSelenium.Tests.csproj" />
   </ItemGroup>
