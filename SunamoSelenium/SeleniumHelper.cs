@@ -61,22 +61,35 @@ public class SeleniumHelper
         logger.LogInformation("Using built-in Selenium Manager for automatic EdgeDriver management");
         try
         {
+            // EN: Enable verbose logging for debugging
+            // CZ: Povolit podrobné logování pro debugging
+            var service = EdgeDriverService.CreateDefaultService();
+            service.LogPath = "edgedriver.log";
+            service.EnableVerboseLogging = true;
+
+            logger.LogInformation("EdgeDriver service created with verbose logging enabled at: edgedriver.log");
+
             // EN: Selenium Manager (built into Selenium 4.6+) will automatically download the correct driver version
             // CZ: Selenium Manager (vestavěný v Selenium 4.6+) automaticky stáhne správnou verzi driveru
-            var driver = new EdgeDriver(options);
+            var driver = new EdgeDriver(service, options);
             driver.Manage().Window.Maximize();
             logger.LogInformation("Successfully initialized EdgeDriver using built-in Selenium Manager");
             return driver;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Built-in Selenium Manager failed: {ErrorMessage}. Inner exception: {InnerException}",
-                ex.Message,
-                ex.InnerException?.Message ?? "none");
+            var detailedMessage = $"EdgeDriver initialization failed. " +
+                $"Error: {ex.Message}. " +
+                $"Inner exception: {ex.InnerException?.Message ?? "none"}. " +
+                $"Stack trace: {ex.StackTrace}. " +
+                $"Please ensure Edge browser is installed and EdgeDriver is compatible with your Edge version. " +
+                $"Download from: {EdgeDriverDownloadUrl}";
+
+            logger.LogError(ex, detailedMessage);
 
             if (throwEx)
             {
-                throw;
+                throw new InvalidOperationException(detailedMessage, ex);
             }
 
             return null;
@@ -117,13 +130,18 @@ public class SeleniumHelper
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Built-in Selenium Manager failed: {ErrorMessage}. Inner exception: {InnerException}",
-                ex.Message,
-                ex.InnerException?.Message ?? "none");
+            var detailedMessage = $"ChromeDriver initialization failed. " +
+                $"Error: {ex.Message}. " +
+                $"Inner exception: {ex.InnerException?.Message ?? "none"}. " +
+                $"Stack trace: {ex.StackTrace}. " +
+                $"Please ensure Chrome browser is installed and ChromeDriver is compatible with your Chrome version. " +
+                $"Download from: {ChromeDriverDownloadUrl}";
+
+            logger.LogError(ex, detailedMessage);
 
             if (throwEx)
             {
-                throw;
+                throw new InvalidOperationException(detailedMessage, ex);
             }
 
             return null;

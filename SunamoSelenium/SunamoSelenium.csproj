@@ -4,8 +4,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Code base for easy work with Selenium</Description>
-    <Version>26.1.2.1</Version>
-    <PackageReleaseNotes>Fixed using SeleniumManger</PackageReleaseNotes>
+    <Version>26.1.3.1</Version>
+    <PackageReleaseNotes>feat: Improved code quality</PackageReleaseNotes>
     <Authors>www.sunamo.cz</Authors>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>

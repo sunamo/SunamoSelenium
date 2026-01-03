@@ -70,7 +70,7 @@ false
         options.AddArgument("--auto-open-devtools-for-tabs");
 
         // Volitelně zkuste přidat user-agenta běžného prohlížeče
-        options.AddArgument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.2572.88");
+        options.AddArgument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.2572.88");
 
         var driver = await SeleniumHelper.InitEdgeDriver(logger, options, throwEx: true);
         if (driver == null)
