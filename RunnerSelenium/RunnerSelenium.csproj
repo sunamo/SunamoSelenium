@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SunamoCl" Version="26.1.2.1" />
-    <PackageReference Include="SunamoDependencyInjection" Version="26.1.1.187" />
+    <PackageReference Include="SunamoCl" Version="26.2.4.1" />
+    <PackageReference Include="SunamoDependencyInjection" Version="26.2.4.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="*" Pack="True" />
     <ProjectReference Include="..\SunamoSelenium.Tests\SunamoSelenium.Tests.csproj" />
   </ItemGroup>
