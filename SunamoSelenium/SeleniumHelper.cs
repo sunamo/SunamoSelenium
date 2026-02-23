@@ -39,6 +39,23 @@ public class SeleniumHelper
     }
 
     /// <summary>
+    /// OBSOLETE: Do NOT use hardcoded driver paths! This method throws an exception.
+    /// EN: Always use Selenium Manager for automatic driver management by calling InitEdgeDriver(logger, options) without path parameter.
+    /// CZ: Vždy používejte Selenium Manager pro automatickou správu driverů voláním InitEdgeDriver(logger, options) bez parametru cesty.
+    /// </summary>
+    [Obsolete("Do NOT use hardcoded driver paths! Use InitEdgeDriver(logger, options) without driverPath parameter. Selenium Manager will automatically download the correct driver version.", true)]
+    public static Task<IWebDriver?> InitEdgeDriver(ILogger logger, string driverPath, EdgeOptions? options = null, bool throwEx = false)
+    {
+        throw new InvalidOperationException(
+            "CRITICAL: Do NOT use hardcoded EdgeDriver paths! " +
+            "Selenium Manager (built into Selenium 4.6+) automatically downloads and manages the correct driver version. " +
+            "Usage: await SeleniumHelper.InitEdgeDriver(logger, options); " +
+            "Remove the 'driverPath' parameter from your code. " +
+            "Selenium Manager will automatically detect your Edge browser version and download the matching EdgeDriver. " +
+            "This ensures compatibility and eliminates manual driver management.");
+    }
+
+    /// <summary>
     /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
     /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
     /// EN: Uses built-in Selenium Manager (Selenium 4.6+) to automatically download and manage EdgeDriver
