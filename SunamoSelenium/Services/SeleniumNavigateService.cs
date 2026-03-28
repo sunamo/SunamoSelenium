@@ -1,14 +1,21 @@
 namespace SunamoSelenium.Services;
 
-public class SeleniumNavigateService(ILogger logger, IWebDriver driver, SeleniumService selenium)
+/// <summary>
+/// Provides navigation functionality for Selenium WebDriver with logging and page-ready waiting.
+/// </summary>
+public class SeleniumNavigateService(ILogger logger, IWebDriver driver, SeleniumService seleniumService)
 {
-    public async Task Go(string newUri)
+    /// <summary>
+    /// Navigates to the specified URL, waits for the page to be fully loaded, and logs the navigation.
+    /// </summary>
+    /// <param name="url">The URL to navigate to.</param>
+    public async Task Go(string url)
     {
         try
         {
-            logger.LogInformation($"Navigate to {newUri}");
-            await driver.Navigate().GoToUrlAsync(newUri);
-            selenium.WaitForPageReady();
+            logger.LogInformation($"Navigate to {url}");
+            await driver.Navigate().GoToUrlAsync(url);
+            seleniumService.WaitForPageReady();
         }
         catch (Exception ex)
         {

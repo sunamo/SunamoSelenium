@@ -1,16 +1,16 @@
 namespace SunamoSelenium._sunamo;
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+/// <summary>
+/// Helper class for Windows process operations.
+/// </summary>
 internal class PHWin
 {
+    /// <summary>
+    /// Opens the specified URL in the default browser on Windows.
+    /// </summary>
+    /// <param name="url">The URL to open.</param>
     internal static void OpenUrlInDefaultBrowser(string url)
     {
-        // Otevře URL ve výchozím prohlížeči na Windows
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
         {
             FileName = url,

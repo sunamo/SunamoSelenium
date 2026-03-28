@@ -1,25 +1,27 @@
-﻿using SunamoCl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using SunamoCl;
 
 namespace RunnerSelenium;
 
 partial class Program
 {
+    /// <summary>
+    /// Creates and returns groups of available actions for the command-line interface.
+    /// </summary>
+    /// <returns>A dictionary mapping group names to their action providers.</returns>
     private static Dictionary<string, Func<Task<Dictionary<string, object>>>> AddGroupOfActions()
     {
         Dictionary<string, Func<Task<Dictionary<string, object>>>> groupsOfActions = new()
         {
-            { "Other", Other }, // 1
+            { "Other", Other },
         };
 
         return groupsOfActions;
     }
 
+    /// <summary>
+    /// Executes the "Other" action group.
+    /// </summary>
+    /// <returns>A dictionary of available actions in this group.</returns>
     static async Task<Dictionary<string, object>> Other()
     {
         var actions = OtherActions();
@@ -32,6 +34,10 @@ partial class Program
         return actions;
     }
 
+    /// <summary>
+    /// Builds the dictionary of actions available in the "Other" group.
+    /// </summary>
+    /// <returns>A merged dictionary of synchronous and asynchronous actions.</returns>
     private static Dictionary<string, object> OtherActions()
     {
         Dictionary<string, Action> actions = new Dictionary<string, Action>();
@@ -40,4 +46,3 @@ partial class Program
         return CLActions.MergeActions(actions, actionsAsync);
     }
 }
-

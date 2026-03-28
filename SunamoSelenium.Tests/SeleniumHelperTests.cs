@@ -1,22 +1,26 @@
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
-
 namespace SunamoSelenium.Tests;
 
 using Microsoft.Extensions.Logging;
 using SunamoTest;
 
+/// <summary>
+/// Tests for <see cref="SeleniumHelper"/> initialization and driver management.
+/// </summary>
 public class SeleniumHelperTests
 {
-    ILogger logger = TestLogger.Instance;
+    private readonly ILogger logger = TestLogger.Instance;
 
+    /// <summary>
+    /// Verifies that InitEdgeDriver
+    /// successfully initializes an EdgeDriver instance using Selenium Manager.
+    /// </summary>
     [Fact]
     public async Task InitDriverTest()
     {
-        // EN: Use Selenium Manager for automatic EdgeDriver download and management
-        // CZ: Použij Selenium Manager pro automatické stažení a správu EdgeDriveru
-        var data = await SeleniumHelper.InitEdgeDriver(logger);
+        var driver = await SeleniumHelper.InitEdgeDriver(logger);
 
-        Assert.NotNull(data);
+        Assert.NotNull(driver);
+
+        driver.Quit();
     }
 }

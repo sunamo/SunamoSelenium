@@ -2,49 +2,56 @@ namespace SunamoSelenium;
 
 using SunamoSelenium._sunamo;
 
+/// <summary>
+/// Helper class for initializing and managing Selenium WebDriver instances.
+/// </summary>
 public class SeleniumHelper
 {
-    // CZ: URL pro stažení EdgeDriver
-    private const string EdgeDriverDownloadUrl = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH";
+    private const string edgeDriverDownloadUrl = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH";
 
-    // CZ: URL pro stažení ChromeDriver
-    private const string ChromeDriverDownloadUrl = "https://googlechromelabs.github.io/chrome-for-testing/";
+    private const string chromeDriverDownloadUrl = "https://googlechromelabs.github.io/chrome-for-testing/";
 
     /// <summary>
-    /// Opens the EdgeDriver download page in the default browser
-    /// CZ: Otevře stránku pro stažení EdgeDriveru ve výchozím prohlížeči
+    /// Opens the EdgeDriver download page in the default browser.
     /// </summary>
     public static void OpenEdgeDriverDownloadPage()
     {
-        PHWin.OpenUrlInDefaultBrowser(EdgeDriverDownloadUrl);
+        PHWin.OpenUrlInDefaultBrowser(edgeDriverDownloadUrl);
     }
 
     /// <summary>
-    /// Opens the ChromeDriver download page in the default browser
-    /// CZ: Otevře stránku pro stažení ChromeDriveru ve výchozím prohlížeči
+    /// Opens the ChromeDriver download page in the default browser.
     /// </summary>
     public static void OpenChromeDriverDownloadPage()
     {
-        PHWin.OpenUrlInDefaultBrowser(ChromeDriverDownloadUrl);
+        PHWin.OpenUrlInDefaultBrowser(chromeDriverDownloadUrl);
     }
 
     /// <summary>
-    /// Alias for InitEdgeDriver for backward compatibility
-    /// EN: Initializes Edge WebDriver using built-in Selenium Manager (automatic driver download)
-    /// CZ: Alias pro InitEdgeDriver kvůli zpětné kompatibilitě. Používá vestavěný Selenium Manager (automatické stažení driveru)
+    /// Alias for <see cref="InitEdgeDriver(ILogger, EdgeOptions?, bool)"/> for backward compatibility.
+    /// Initializes Edge WebDriver using built-in Selenium Manager (automatic driver download).
     /// </summary>
-    public static async Task<IWebDriver?> InitDriver(ILogger logger, EdgeOptions? options = null, bool throwEx = false)
+    /// <param name="logger">The logger instance for diagnostic output.</param>
+    /// <param name="options">Optional Edge browser options.</param>
+    /// <param name="isThrowingException">When true, throws an exception on failure instead of returning null.</param>
+    /// <returns>An initialized <see cref="IWebDriver"/> instance or null on failure.</returns>
+    public static async Task<IWebDriver?> InitDriver(ILogger logger, EdgeOptions? options = null, bool isThrowingException = false)
     {
-        return await InitEdgeDriver(logger, options, throwEx);
+        return await InitEdgeDriver(logger, options, isThrowingException);
     }
 
     /// <summary>
-    /// OBSOLETE: Do NOT use hardcoded driver paths! This method throws an exception.
-    /// EN: Always use Selenium Manager for automatic driver management by calling InitEdgeDriver(logger, options) without path parameter.
-    /// CZ: Vždy používejte Selenium Manager pro automatickou správu driverů voláním InitEdgeDriver(logger, options) bez parametru cesty.
+    /// OBSOLETE: Do NOT use hardcoded driver paths. This method throws an exception.
+    /// Always use Selenium Manager for automatic driver management by calling
+    /// <see cref="InitEdgeDriver(ILogger, EdgeOptions?, bool)"/> without path parameter.
     /// </summary>
+    /// <param name="logger">The logger instance for diagnostic output.</param>
+    /// <param name="driverPath">The hardcoded driver path (not supported).</param>
+    /// <param name="options">Optional Edge browser options.</param>
+    /// <param name="isThrowingException">When true, throws an exception on failure instead of returning null.</param>
+    /// <returns>Never returns; always throws <see cref="InvalidOperationException"/>.</returns>
     [Obsolete("Do NOT use hardcoded driver paths! Use InitEdgeDriver(logger, options) without driverPath parameter. Selenium Manager will automatically download the correct driver version.", true)]
-    public static Task<IWebDriver?> InitEdgeDriver(ILogger logger, string driverPath, EdgeOptions? options = null, bool throwEx = false)
+    public static Task<IWebDriver?> InitEdgeDriver(ILogger logger, string driverPath, EdgeOptions? options = null, bool isThrowingException = false)
     {
         throw new InvalidOperationException(
             "CRITICAL: Do NOT use hardcoded EdgeDriver paths! " +
@@ -56,38 +63,32 @@ public class SeleniumHelper
     }
 
     /// <summary>
-    /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
-    /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
-    /// EN: Uses built-in Selenium Manager (Selenium 4.6+) to automatically download and manage EdgeDriver
-    /// CZ: Používá vestavěný Selenium Manager (Selenium 4.6+) pro automatické stažení a správu EdgeDriveru
+    /// Initializes an Edge WebDriver instance using built-in Selenium Manager (Selenium 4.6+)
+    /// for automatic driver download and management.
+    /// After initialization, register the driver via ServiceCollection.AddSingleton(typeof(IWebDriver), driver).
     /// </summary>
-    /// <returns></returns>
-    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, EdgeOptions? options = null, bool throwEx = false)
+    /// <param name="logger">The logger instance for diagnostic output.</param>
+    /// <param name="options">Optional Edge browser options. If null, default options are created.</param>
+    /// <param name="isThrowingException">When true, throws an exception on failure instead of returning null.</param>
+    /// <returns>An initialized <see cref="IWebDriver"/> instance or null on failure.</returns>
+    public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, EdgeOptions? options = null, bool isThrowingException = false)
     {
         if (options == null)
         {
             options = new();
         }
 
-        // EN: Add arguments to avoid disconnected: not connected to DevTools error
-        // CZ: Přidat argumenty pro vyvarování se chybě disconnected: not connected to DevTools
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 
-        // EN: Use built-in Selenium Manager for automatic EdgeDriver download and management
-        // CZ: Použít vestavěný Selenium Manager pro automatické stažení a správu EdgeDriveru
         logger.LogInformation("Using built-in Selenium Manager for automatic EdgeDriver management");
         try
         {
-            // EN: Enable verbose logging for debugging
-            // CZ: Povolit podrobné logování pro debugging
             var service = EdgeDriverService.CreateDefaultService();
             service.LogPath = "edgedriver.log";
             service.EnableVerboseLogging = true;
 
             logger.LogInformation("EdgeDriver service created with verbose logging enabled at: edgedriver.log");
 
-            // EN: Selenium Manager (built into Selenium 4.6+) will automatically download the correct driver version
-            // CZ: Selenium Manager (vestavěný v Selenium 4.6+) automaticky stáhne správnou verzi driveru
             var driver = new EdgeDriver(service, options);
             driver.Manage().Window.Maximize();
             logger.LogInformation("Successfully initialized EdgeDriver using built-in Selenium Manager");
@@ -100,11 +101,11 @@ public class SeleniumHelper
                 $"Inner exception: {ex.InnerException?.Message ?? "none"}. " +
                 $"Stack trace: {ex.StackTrace}. " +
                 $"Please ensure Edge browser is installed and EdgeDriver is compatible with your Edge version. " +
-                $"Download from: {EdgeDriverDownloadUrl}";
+                $"Download from: {edgeDriverDownloadUrl}";
 
             logger.LogError(ex, detailedMessage);
 
-            if (throwEx)
+            if (isThrowingException)
             {
                 throw new InvalidOperationException(detailedMessage, ex);
             }
@@ -114,32 +115,28 @@ public class SeleniumHelper
     }
 
     /// <summary>
-    /// Then add ServiceCollection.AddSingleton(typeof(IWebDriver), driver);
-    /// Poté se přihlaš. Nemá smysl to tu předávat jako metodu, do logIn bych potřeboval seleniumNavigateService, které bych musel vytvořit ručně. BuildServiceProvider volám až po přidání IWebDriver do services
-    /// EN: Uses built-in Selenium Manager (Selenium 4.6+) to automatically download and manage ChromeDriver
-    /// CZ: Používá vestavěný Selenium Manager (Selenium 4.6+) pro automatické stažení a správu ChromeDriveru
+    /// Initializes a Chrome WebDriver instance using built-in Selenium Manager (Selenium 4.6+)
+    /// for automatic driver download and management.
+    /// After initialization, register the driver via ServiceCollection.AddSingleton(typeof(IWebDriver), driver).
     /// </summary>
-    /// <returns></returns>
-    public static async Task<IWebDriver?> InitChromeDriver(ILogger logger, ChromeOptions? options = null, bool throwEx = false)
+    /// <param name="logger">The logger instance for diagnostic output.</param>
+    /// <param name="options">Optional Chrome browser options. If null, default options are created.</param>
+    /// <param name="isThrowingException">When true, throws an exception on failure instead of returning null.</param>
+    /// <returns>An initialized <see cref="IWebDriver"/> instance or null on failure.</returns>
+    public static async Task<IWebDriver?> InitChromeDriver(ILogger logger, ChromeOptions? options = null, bool isThrowingException = false)
     {
-        await Task.Delay(0); // EN: Make method async / CZ: Udělat metodu asynchronní
+        await Task.Delay(0);
 
         if (options == null)
         {
             options = new();
         }
 
-        // EN: Add arguments to avoid disconnected: not connected to DevTools error
-        // CZ: Přidat argumenty pro vyvarování se chybě disconnected: not connected to DevTools
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 
-        // EN: Use built-in Selenium Manager for automatic ChromeDriver download and management
-        // CZ: Použít vestavěný Selenium Manager pro automatické stažení a správu ChromeDriveru
         logger.LogInformation("Using built-in Selenium Manager for automatic ChromeDriver management");
         try
         {
-            // EN: Selenium Manager (built into Selenium 4.6+) will automatically download the correct driver version
-            // CZ: Selenium Manager (vestavěný v Selenium 4.6+) automaticky stáhne správnou verzi driveru
             var driver = new ChromeDriver(options);
             driver.Manage().Window.Maximize();
             logger.LogInformation("Successfully initialized ChromeDriver using built-in Selenium Manager");
@@ -152,11 +149,11 @@ public class SeleniumHelper
                 $"Inner exception: {ex.InnerException?.Message ?? "none"}. " +
                 $"Stack trace: {ex.StackTrace}. " +
                 $"Please ensure Chrome browser is installed and ChromeDriver is compatible with your Chrome version. " +
-                $"Download from: {ChromeDriverDownloadUrl}";
+                $"Download from: {chromeDriverDownloadUrl}";
 
             logger.LogError(ex, detailedMessage);
 
-            if (throwEx)
+            if (isThrowingException)
             {
                 throw new InvalidOperationException(detailedMessage, ex);
             }
