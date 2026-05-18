@@ -4,11 +4,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Code base for easy work with Selenium</Description>
-    <Version>26.3.28.3</Version>
-    <PackageReleaseNotes>feat: Improved variable names</PackageReleaseNotes>
+    <Version>26.5.18.4</Version>
+    <PackageReleaseNotes>y</PackageReleaseNotes>
     <Authors>www.sunamo.cz</Authors>
     <Copyright>www.sunamo.cz</Copyright>
-    <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
+    <PackageProjectUrl>https://sunamo.github.io/PlatformIndependentNuGetPackages/SunamoSelenium/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sunamo/SunamoSelenium.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
