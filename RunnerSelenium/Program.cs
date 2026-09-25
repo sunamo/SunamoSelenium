@@ -8,6 +8,9 @@ using SunamoSelenium;
 
 namespace RunnerSelenium;
 
+/// <summary>
+/// Entry point for the Selenium runner application.
+/// </summary>
 partial class Program
 {
     const string appName = "ToNugets.Cmd.Roslyn";
