@@ -42,11 +42,6 @@ partial class Program
             RunInDebugAsync = RunInDebugAsync,
             ServiceCollection = services,
             IsDebug =
-#if DEBUG
-          true
-#else
-false
-#endif
         });
 
         Console.ReadLine();
@@ -65,7 +60,7 @@ false
         options.AddArgument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.2572.88");
 
         var driver = await SeleniumHelper.InitEdgeDriver(logger, options, isThrowingException: true);
-        if (driver == null)
+        if (driver is null)
         {
             logger.LogError("Failed to initialize Edge driver");
             return;

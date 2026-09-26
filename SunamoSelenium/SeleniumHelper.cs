@@ -73,10 +73,7 @@ public class SeleniumHelper
     /// <returns>An initialized <see cref="IWebDriver"/> instance or null on failure.</returns>
     public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, EdgeOptions? options = null, bool isThrowingException = false)
     {
-        if (options == null)
-        {
-            options = new();
-        }
+        options ??= new();
 
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 
@@ -127,10 +124,7 @@ public class SeleniumHelper
     {
         await Task.Delay(0);
 
-        if (options == null)
-        {
-            options = new();
-        }
+        options ??= new();
 
         options.AddArguments(["--disable-dev-shm-usage", "--no-sandbox"]);
 

@@ -10,8 +10,5 @@ public static class StringToUnixLineEndingExtensions
     /// </summary>
     /// <param name="text">The string to convert.</param>
     /// <returns>The string with Unix-style line endings.</returns>
-    public static string ToUnixLineEnding(this string text)
-    {
-        return text.ReplaceLineEndings("\n");
-    }
+    public static string ToUnixLineEnding(this string text) => text.ReplaceLineEndings("\n");
 }

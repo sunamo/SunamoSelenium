@@ -12,14 +12,14 @@ public static class ExceptionsExtensions
     /// <returns>A concatenated string of all exception messages including inner exceptions.</returns>
     public static string GetAllMessages(this Exception exception)
     {
-        if (exception == null)
+        if (exception is null)
         {
             return "";
         }
 
         string message = exception.Message;
 
-        if (exception.InnerException != null)
+        if (exception.InnerException is not null)
         {
             message += Environment.NewLine + "Inner Exception: " + exception.InnerException.GetAllMessages();
         }

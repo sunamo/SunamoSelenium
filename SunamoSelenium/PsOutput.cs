@@ -33,7 +33,7 @@ public class PsOutput
     /// <returns>A list of formatted error messages.</returns>
     public static List<string> ProcessErrorRecords(PSDataCollection<ErrorRecord> errors)
     {
-        List<string> result = new List<string>();
+        var result = new List<string>();
         StringBuilder stringBuilder = new();
         foreach (var item in errors)
         {
@@ -51,8 +51,8 @@ public class PsOutput
     private static void AddErrorRecord(StringBuilder stringBuilder, ErrorRecord errorRecord)
     {
         stringBuilder.Clear();
-        if (errorRecord == null) return;
-        if (errorRecord.ErrorDetails != null) stringBuilder.AppendLine(errorRecord.ErrorDetails.Message);
+        if (errorRecord is null) return;
+        if (errorRecord.ErrorDetails is not null) stringBuilder.AppendLine(errorRecord.ErrorDetails.Message);
         stringBuilder.AppendLine(errorRecord.Exception.GetAllMessages());
     }
 
@@ -65,7 +65,7 @@ public class PsOutput
     {
         var result = new List<string>();
         foreach (var item in collection)
-            if (item != null)
+            if (item is not null)
                 result.Add(item.ToString().ToUnixLineEnding());
         return result;
     }

@@ -11,8 +11,5 @@ public static class ByHelper
     /// </summary>
     /// <param name="text">Space-separated CSS class names.</param>
     /// <returns>A <see cref="By"/> CSS selector locator matching all specified classes.</returns>
-    public static By ClassName(string text)
-    {
-        return By.CssSelector("." + text.Replace(" ", "."));
-    }
+    public static By ClassName(string text) => By.CssSelector("." + text.Replace(" ", "."));
 }
