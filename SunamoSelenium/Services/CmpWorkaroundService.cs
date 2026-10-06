@@ -1,17 +1,7 @@
 namespace SunamoSelenium.Services;
 
-/// <summary>
-/// Workaround service for CMP (Consent Management Platform) dialogs.
-/// When loading certain pages (e.g. firmy.cz) without authentication, a CMP dialog appears.
-/// Logging in first bypasses the CMP dialog.
-/// </summary>
 public class CmpWorkaroundService(ILogger logger)
 {
-    /// <summary>
-    /// Logs into Seznam.cz account using Edge WebDriver to bypass CMP dialogs on Seznam services.
-    /// </summary>
-    /// <param name="email">The Seznam.cz account email address.</param>
-    /// <param name="password">The account password.</param>
     public async Task LoginSeznamCz(string email, string password)
     {
         var driver = await SeleniumHelper.InitEdgeDriver(logger);
