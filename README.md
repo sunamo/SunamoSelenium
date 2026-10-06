@@ -1,5 +1,10 @@
 # SunamoSelenium
 
+## Short description
+
+Knihovna pro zjednodušenou inicializaci a správu Selenium WebDriveru. Obsahuje Runner a testy.
+
+
 A .NET library for simplified Selenium WebDriver initialization and management.
 
 ## Overview

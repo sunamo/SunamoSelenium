@@ -1,8 +1,5 @@
 namespace SunamoSelenium;
 
-/// <summary>
-/// Helper methods for creating Selenium <see cref="By"/> locators.
-/// </summary>
 public static class ByHelper
 {
     /// <summary>
