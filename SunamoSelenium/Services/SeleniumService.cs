@@ -1,7 +1,16 @@
 namespace SunamoSelenium.Services;
 
+/// <summary>
+/// Selenium service.
+/// </summary>
+/// <param name="driver">The driver.</param>
+/// <param name="logger">The logger.</param>
+/// <returns>The selenium service result.</returns>
 public class SeleniumService(IWebDriver driver, ILogger logger)
 {
+    /// <summary>
+    /// Wait for page ready.
+    /// </summary>
     public void WaitForPageReady()
     {
         var startTime = DateTime.Now;
@@ -13,12 +22,21 @@ public class SeleniumService(IWebDriver driver, ILogger logger)
         logger.LogWarning($"Waiting for page {driver.Url} was {statusText} successful. Waiting seconds: {elapsedTime.TotalSeconds}");
     }
 
+    /// <summary>
+    /// Wait for element is visible.
+    /// </summary>
+    /// <param name="locator">The locator.</param>
     public void WaitForElementIsVisible(By locator)
     {
         WebDriverWait wait = new(driver, TimeSpan.FromSeconds(3));
         wait.Until(ExpectedConditions.ElementIsVisible(locator));
     }
 
+    /// <summary>
+    /// Find element.
+    /// </summary>
+    /// <param name="locator">The locator.</param>
+    /// <returns>The find element result.</returns>
     public IWebElement? FindElement(By locator)
     {
         var elements = driver.FindElements(locator);

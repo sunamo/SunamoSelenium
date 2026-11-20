@@ -1,7 +1,17 @@
 namespace SunamoSelenium.Services;
 
+/// <summary>
+/// Cmp workaround service.
+/// </summary>
+/// <param name="logger">The logger.</param>
+/// <returns>The cmp workaround service result.</returns>
 public class CmpWorkaroundService(ILogger logger)
 {
+    /// <summary>
+    /// Login seznam cz.
+    /// </summary>
+    /// <param name="email">The email.</param>
+    /// <param name="password">The password.</param>
     public async Task LoginSeznamCz(string email, string password)
     {
         var driver = await SeleniumHelper.InitEdgeDriver(logger);
