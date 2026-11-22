@@ -1,5 +1,8 @@
 namespace SunamoSelenium;
 
+/// <summary>
+/// Represents the by helper type.
+/// </summary>
 public static class ByHelper
 {
     /// <summary>

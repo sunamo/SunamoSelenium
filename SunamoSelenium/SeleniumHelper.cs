@@ -2,27 +2,51 @@ namespace SunamoSelenium;
 
 using SunamoSelenium._sunamo;
 
+/// <summary>
+/// Represents the selenium helper type.
+/// </summary>
 public class SeleniumHelper
 {
     private const string edgeDriverDownloadUrl = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/?form=MA13LH";
 
     private const string chromeDriverDownloadUrl = "https://googlechromelabs.github.io/chrome-for-testing/";
 
+    /// <summary>
+    /// Open edge driver download page.
+    /// </summary>
     public static void OpenEdgeDriverDownloadPage()
     {
         PHWin.OpenUrlInDefaultBrowser(edgeDriverDownloadUrl);
     }
 
+    /// <summary>
+    /// Open chrome driver download page.
+    /// </summary>
     public static void OpenChromeDriverDownloadPage()
     {
         PHWin.OpenUrlInDefaultBrowser(chromeDriverDownloadUrl);
     }
 
+    /// <summary>
+    /// Init driver.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="options">The options.</param>
+    /// <param name="isThrowingException">The is throwing exception.</param>
+    /// <returns>The init driver result.</returns>
     public static async Task<IWebDriver?> InitDriver(ILogger logger, EdgeOptions? options = null, bool isThrowingException = false)
     {
         return await InitEdgeDriver(logger, options, isThrowingException);
     }
 
+    /// <summary>
+    /// Init edge driver.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="driverPath">The driver path.</param>
+    /// <param name="options">The options.</param>
+    /// <param name="isThrowingException">The is throwing exception.</param>
+    /// <returns>The init edge driver result.</returns>
     [Obsolete("Do NOT use hardcoded driver paths! Use InitEdgeDriver(logger, options) without driverPath parameter. Selenium Manager will automatically download the correct driver version.", true)]
     public static Task<IWebDriver?> InitEdgeDriver(ILogger logger, string driverPath, EdgeOptions? options = null, bool isThrowingException = false)
     {
@@ -35,6 +59,13 @@ public class SeleniumHelper
             "This ensures compatibility and eliminates manual driver management.");
     }
 
+    /// <summary>
+    /// Init edge driver.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="options">The options.</param>
+    /// <param name="isThrowingException">The is throwing exception.</param>
+    /// <returns>The init edge driver result.</returns>
     public static async Task<IWebDriver?> InitEdgeDriver(ILogger logger, EdgeOptions? options = null, bool isThrowingException = false)
     {
         options ??= new();
@@ -75,6 +106,13 @@ public class SeleniumHelper
         }
     }
 
+    /// <summary>
+    /// Init chrome driver.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="options">The options.</param>
+    /// <param name="isThrowingException">The is throwing exception.</param>
+    /// <returns>The init chrome driver result.</returns>
     public static async Task<IWebDriver?> InitChromeDriver(ILogger logger, ChromeOptions? options = null, bool isThrowingException = false)
     {
         await Task.Delay(0);

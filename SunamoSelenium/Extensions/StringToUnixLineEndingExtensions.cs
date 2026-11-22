@@ -1,5 +1,8 @@
 namespace SunamoSelenium.Extensions;
 
+/// <summary>
+/// Represents the string to unix line ending extensions type.
+/// </summary>
 public static class StringToUnixLineEndingExtensions
 {
     /// <summary>
