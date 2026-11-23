@@ -42,6 +42,11 @@ partial class Program
             RunInDebugAsync = RunInDebugAsync,
             ServiceCollection = services,
             IsDebug =
+#if DEBUG
+                true
+#else
+                false
+#endif
         });
 
         Console.ReadLine();
